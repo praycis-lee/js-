@@ -26,4 +26,3 @@ http://blog.csdn.NET/zhaokaiqiang1992/article/details/41349819
     当然，如果你使用的是其他的平台的话，你可以选择在线的编辑器，效果也非常棒。
     给出两个在线的Markdown编辑器
     http://mahua.jser.me/
-    http://maxiang.info/
