@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>js继承</title>
+</head>
+<body>
+<script>
+//类式继承：************************************************************************************************
+	//类式继承是通过子类的原型prototype对父类实例化实现的
+//声明父类
+function SuperClass(){
+	this.superValue = true
+}
+//添加父类的共有方法
+SuperClass.prototype.getSuperValue = function(){
+	return this.superValue
+}
+SuperClass.prototype.a = 'sss'
+//声明子类
+function SubClass(){
+	this.subValue = false
+}
+//继承父类
+SubClass.prototype = new SuperClass()
+//添加子类的共有方法
+SubClass.prototype.getSubValue = function(){
+	return this.subValue
+}
+//创建一个子类实例
+var instance = new SubClass()
+console.log(instance.getSuperValue())//true
+console.log(instance.getSubValue())//false
+console.log(instance instanceof SuperClass)//true
+console.log(instance instanceof SubClass)//true
+console.log(SubClass instanceof SuperClass)//false
+console.log(SubClass instanceof Function)//true,他是function的实例
+console.log(SubClass.prototype instanceof SuperClass)//true
+console.log(instance instanceof Object)//true;所有实例化的对象都是Object的实例
+
+
+//类式继承的缺点1：由于子类通过子类的原型对父类实例化，继承了父类，所以说父类中的共有属性如果是引用类型，就会在子类中被所有实例公用，因此一个子类的实例更改子类原型从父类构造函数中继承来的共有属性就会直接影响到其他子类，比如如下代码：
+function SuperBook(){
+	this.books = ['javascript','java','php']
+}
+function SubBook(){}
+SubBook.prototype = new SuperBook()
+var book1 = new SubBook()
+var book2 = new SubBook()
+book1.books.push('python')
+console.log(book2.books)//['javascript','java','php','python']
+console.log(book1.books)//['javascript','java','php','python']
+//类式继承的缺点2：由于子类实现的继承是靠其原型prototype对父类的实例化实现的，因此在创建父类的时候，是无法向父类传递参数的，因而在实例化父类的时候也无法对父类构造函数内的属性进行初始化
+
+
+//构造函数式继承：************************************************************************************************
+	//构造函数继承是通过在子类的构造函数中执行一次父类的构造函数
+//声明父类
+function SuperClass1(id){
+	//引用类型共有属性
+	this.books = ['javascript','java','php']
+	//值类型共有属性
+	this.id = id
+}
+//父类声明原型方法
+SuperClass1.prototype.showBooks = function(){
+	console.log(this.books)
+}
+//声明子类
+function SubClass1(id){
+	//继承父类
+	SuperClass1.call(this,id)
+}
+//创建第一个子类的实例
+var instance1 = new SubClass1(10)
+//创建第二个子类的实例
+var instance2 = new SuperClass1(11)
+instance1.books.push('python')
+console.log(instance1.books);//['javascript','java','php']
+console.log(instance2.books);//['javascript','java','php','python']
+console.log(instance1.showBooks)//undefined，说明没有继承到父类的prototype,只能继承到父类的构造函数里面的东西
+//由于call方法可以改变函数的作用域，因此在子类中调用call方法就是将子类中的变量在父类中执行一次，由于父类是给this绑定属性的，因此子类也就继承了父类的共有属性，由于此类型的继承没有涉及到prototype，所以父类的原型方法自然不会被子类继承，这样就违背了代码复用的原则，为了综合这两种模式的优点，就有了组合继承
+
+
+//组合继承************************************************************************************************
+
+//声明父类
+function SuperClass2(name){
+	//值类型共有属性
+	this.name = name
+	//引用类型共有属性
+	this.books = ['javascript','java','php']
+}
+//父类原型共有方法
+SuperClass2.prototype.getName = function(){
+	console.log(this.name)
+}
+//声明子类
+function SubClass2(name,time){
+	//构造函数继承父类name属性
+	SuperClass2.call(this,name)
+	//子类中新增共有属性
+	this.time = time
+}
+//类式继承 子类原型继承父类
+SubClass2.prototype = new SuperClass2()
+//子类原型方法
+SuperClass2.prototype.getTime = function(){
+	console.log(this.time)
+}
+var a = new SubClass2();
+var b = new SubClass2();
+a.books.push('python');
+console.log(a.books);//['javascript','java','php']
+console.log(b.books);//['javascript','java','php','python']
+console.log(b)
+</script>
+</body>
+</html>
