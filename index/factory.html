@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>factory</title>
+</head>
+<body>
+	<script>
+	//简单工厂模式的DEMO*************************************************************************************
+	//通过对产品类的抽象使其创建业务，主要负责用于创建多产品的实例
+		var Factory = function(a,b,c){
+			var o = new Object()//创建一个对象
+			//以下是拓展对象的属性
+			o.a = a
+			o.b = b
+			o.c = c
+			//最后返回这个对象
+			return o
+		}
+		var x = Factory('1','2','3')
+		console.log(x)
+       //安全模式*************************************************************************************************************************
+       var Demo = function(){
+       		if(!(this instanceof Demo)){//判断是否为构造函数创建的实例，如果是，正常运行，否则，返回NEW DEMO
+       			return new Demo()
+       		}
+       }
+       Demo.prototype.show = function(){
+       	console.log('成功获取')
+       }
+       var instance = Demo();
+      	instance.show()
+			//原始工厂类的DEMO***********************************************************************************************************
+			var Java = function(content){
+				this.content = content;
+				(function(){
+					var div = document.createElement('div');
+					div.innerHTML = content;
+					div.style.color = 'red';
+				})(content)
+			}
+			var Php = function(content){
+				this.content = content;
+				(function(){
+					var div = document.createElement('div');
+					div.innerHTML = content;
+					div.style.color = 'red';
+				})(content)
+			}
+			//学科类工厂
+			var Factory1 = function(type,content){
+				switch(type){
+					case 'java':return new Java(content);
+					case 'php':return new Php(content)
+				}
+			};
+			var x = new Factory1('java','sss')
+			console.log(x);
+			//缺点：增加学科类的同时，学科类工厂也要进行相应的更改
+      	//安全模式创建一个工厂类****************************************************************************************************
+      	var Factory2 = function(type,content){
+      		if(this instanceof Factory2){
+      			return this[type](content)
+      		}else{
+      			return new Factory2()
+      		}
+      	}
+      	//工厂原型中设置创建所有类型数据的基类
+      	Factory2.prototype = {
+      		'Java':function(content){
+      			this.content = content;
+				(function(){
+					var div = document.createElement('div');
+					div.innerHTML = content;
+					div.style.color = 'red';
+				})(content)
+      		},
+      		'Php':function(content){
+      			this.content = content;
+				(function(){
+					var div = document.createElement('div');
+					div.innerHTML = content;
+					div.style.color = 'red';
+				})(content)
+      		},
+      		'Javascript':function(content){
+      			this.content = content;
+				(function(){
+					var div = document.createElement('div');
+					div.innerHTML = content;
+					div.style.color = 'red';
+				})(content)
+      		}
+      	}
+      	var java = new Factory2('Javascript','javascript是很好的语言！！！')
+      	console.log(java)
+	</script>
+</body>
+</html>

@@ -41,16 +41,17 @@ console.log(instance instanceof Object)//true;所有实例化的对象都是Obje
 
 
 //类式继承的缺点1：由于子类通过子类的原型对父类实例化，继承了父类，所以说父类中的共有属性如果是引用类型，就会在子类中被所有实例公用，因此一个子类的实例更改子类原型从父类构造函数中继承来的共有属性就会直接影响到其他子类，比如如下代码：
-function SuperBook(){
-	this.books = ['javascript','java','php']
+function SuperBook(s){
+	this.books = ['javascript','java','php',s]
 }
 function SubBook(){}
-SubBook.prototype = new SuperBook()
+SubBook.prototype = new SuperBook('sss')
 var book1 = new SubBook()
 var book2 = new SubBook()
 book1.books.push('python')
 console.log(book2.books)//['javascript','java','php','python']
 console.log(book1.books)//['javascript','java','php','python']
+
 //类式继承的缺点2：由于子类实现的继承是靠其原型prototype对父类的实例化实现的，因此在创建父类的时候，是无法向父类传递参数的，因而在实例化父类的时候也无法对父类构造函数内的属性进行初始化
 
 
@@ -106,15 +107,15 @@ function SubClass2(name,time){
 //类式继承 子类原型继承父类
 SubClass2.prototype = new SuperClass2()
 //子类原型方法
-SuperClass2.prototype.getTime = function(){
+SubClass2.prototype.getTime = function(){
 	console.log(this.time)
 }
-var a = new SubClass2();
-var b = new SubClass2();
+var a = new SubClass2('zhang','2015');
+var b = new SubClass2('lee','2014');
 a.books.push('python');
 console.log(a.books);//['javascript','java','php']
 console.log(b.books);//['javascript','java','php','python']
-console.log(b)
+b.getName();
 </script>
 </body>
 </html>
